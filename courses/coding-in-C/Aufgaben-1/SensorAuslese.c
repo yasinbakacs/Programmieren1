@@ -21,5 +21,6 @@ int main() {
     }else{
         printf("Spannung in Ordnung\n");
     }
+    printf("Statusbyte: 0x%02X\n", status);
     return 0;
 }
