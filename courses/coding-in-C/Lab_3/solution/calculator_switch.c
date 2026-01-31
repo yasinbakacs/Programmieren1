@@ -1,6 +1,6 @@
 /*
  * File: calculator.c
- * Description: Simple calculator program
+ * Description: Simple calculator program using switch-case
  */
 
 #include <stdio.h>
