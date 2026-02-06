@@ -12,7 +12,6 @@ void main(){
     char op;
     printf("Erste Zahl (float): ");
     scanf("%f", &a);
-    //printf("%.2f", a);
     printf("Zweite Zahl (float): ");
     scanf("%f", &b);
     printf("Gewuenschter Operator(+, -, *, /): ");
