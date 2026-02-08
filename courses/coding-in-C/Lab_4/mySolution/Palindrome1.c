@@ -1,5 +1,5 @@
 #include <stdio.h>
-void string(char)
+
 void main(){
     char str[] = "Curly bird catches the worm";
     char *ptr = str;
