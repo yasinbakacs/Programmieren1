@@ -19,6 +19,21 @@ int main(){
     
     ObjectDetection(&s1, 1, 0.8);
     ObjectDetection(&s2, 2, 0.7);
+    printf("Fused Signal : ");
+    int check = 0;
+     for (int i = 0; i < 3000; i++){
+        if(s1.object_detention[i] == 1 && s2.object_detention[i] == 1){
+            if(check == 0){
+            printf("Start: %f ", s1.data[i].time);
+            check = 1;
+            
+            
+            }
+        }else if(check == 1){
+            printf("Ende: %f ", s1.data[i-1].time);
+            check = 0;
+        }
+    }
 }
 
 
@@ -54,5 +69,5 @@ int ObjectDetection(struct Sensor *s, int index, double threshold){
             }
     }
     fclose(f);
-    return 0;
+    return s->object_detention[3000];
 }
