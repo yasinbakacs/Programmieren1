@@ -23,17 +23,24 @@ for(int i = 0; i < 50; i++){
     }
    
 print_list(head, 10);
-
+insert_at_3(head, 42.0);
 
 
 int arr[51];
 for(int i = 0; i < 50; i++){
     arr[i] = rand() % 100;
 }
+int temp = 0;
+for (int i = 50; i > 2; i--){
+    arr[i] = arr[i+1];
+}
+arr[2] = 42;
 
-insert_at_3(head, 42.0);
+
 printf("Node new");
 print_list(head, 10);
+free(head);
+
 }
 
 
@@ -57,6 +64,7 @@ Node *create_Node(double value){
     newNode->value = value;
     newNode->next = NULL;
     return newNode;
+    free(newNode);
 }
 
 /*
@@ -75,6 +83,8 @@ Node* insert_at_3(Node *head, double value){
     }
     newNode->next = current->next;
     current->next = newNode;
+    return head;
+    free(newNode);
 }
 
 
