@@ -24,6 +24,8 @@ int main(void){
     printf("Gefunden: %s von %s\n", found->title, found->artist);
     }else printf("Song nicht gefunden.\n");
 
+    int count = count_songs_recursive(myPlaylist.head);
+    printf("Es sind %d Song(s) in der Playlist.", count);
     delete_Playlist(&myPlaylist);
     return 0;
 }
