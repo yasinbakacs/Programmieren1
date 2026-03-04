@@ -92,14 +92,33 @@ void delete_firstSong(Playlist *playlist){
 }
 
 
+//@brief Deletes the whole playlist and frees the memory.
+//
+//@param [in] Playlist *playlist a pointer to the playlist that is to be deletet.
+
+void delete_Playlist(Playlist *playlist){
+    Song *temp = playlist->head;
+
+    while(temp != NULL){
+        Song *current = temp;
+        temp = temp->next;
+
+        free(current->artist);
+        free(current->title);
+        free(current);
+    }
+    playlist->head = NULL;
+}
+
 void main(){
     Playlist myPlaylist;
     init_playlist(&myPlaylist);
     add_song(&myPlaylist, "Crawling", "Linkin Park");
-    add_song(&myPlaylist, "Layla", "Eric Claptonn");
+    add_song(&myPlaylist, "Layla", "Eric Clapton");
     add_song(&myPlaylist, "Esperanto", "Max Herre");
     print_List(&myPlaylist);
-    delet_firstSong(&myPlaylist);
+    delete_firstSong(&myPlaylist);
+    printf("\n\n");
     print_List(&myPlaylist);
     delete_Playlist(&myPlaylist);
 }
