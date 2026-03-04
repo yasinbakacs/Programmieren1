@@ -136,3 +136,20 @@ int count_songs_recursive(const Song *current){
     }
     return 1 + count_songs_recursive(current->next);
 }
+
+
+void sort_playlist_by_title(Playlist *playlist){
+
+    Song *sorted = NULL;
+    Song *current = playlist->head;
+
+    while (current != 0){
+        Song *next = current->next;
+
+        if(sorted == NULL || strcmp (current->title, sorted->title) < 0){
+            current-
+        }
+
+
+    }
+}
