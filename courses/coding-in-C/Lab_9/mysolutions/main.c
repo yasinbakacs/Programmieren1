@@ -10,6 +10,10 @@ int main(void){
     add_song(&myPlaylist, "Crawling", "Linkin Park");
     add_song(&myPlaylist, "Layla", "Eric Clapton");
     add_song(&myPlaylist, "Esperanto", "Max Herre");
+    add_song(&myPlaylist, "Hello", "Adele");
+    add_song(&myPlaylist, "Umbrella", "Rihanna");
+    add_song(&myPlaylist, "Lights", "Ella Goulding");
+ 
     
     print_List(&myPlaylist);
 
@@ -25,7 +29,11 @@ int main(void){
     }else printf("Song nicht gefunden.\n");
 
     int count = count_songs_recursive(myPlaylist.head);
-    printf("Es sind %d Song(s) in der Playlist.", count);
+    printf("Es sind %d Song(s) in der Playlist.\n", count);
+
+    sort_playlist_by_title(&myPlaylist);
+    print_List(&myPlaylist);
+    
     delete_Playlist(&myPlaylist);
     return 0;
 }

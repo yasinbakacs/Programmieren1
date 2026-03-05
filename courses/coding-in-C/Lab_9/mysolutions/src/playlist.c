@@ -147,9 +147,19 @@ void sort_playlist_by_title(Playlist *playlist){
         Song *next = current->next;
 
         if(sorted == NULL || strcmp (current->title, sorted->title) < 0){
-            current-
+            current->next = sorted;
+            sorted = current;
+        } else {
+        Song *temp = sorted;
+        
+        while (temp->next != NULL && strcmp (temp->next->title, current->title) <= 0){
+            temp = temp->next;
         }
 
-
+        current->next = temp->next;
+        temp->next = current;
+        }
+        current = next;
     }
+    playlist->head = sorted;
 }
