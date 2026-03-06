@@ -13,6 +13,7 @@
 
 void init_playlist(Playlist *playlist){
     playlist->head = NULL;
+    playlist->count = 0;
 }
 
 //@brief Adds a new Song to end of Playlist. Memory is allocated dynamically.
