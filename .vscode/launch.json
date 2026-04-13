@@ -2,52 +2,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run / Debug C",
+            "name": "Run C",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "build (c)",
-            "windows": {
-                "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "MIMode": "gdb",
-                "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe"
-            },
-            "linux": {
-                "MIMode": "gdb",
-                "miDebuggerPath": "/usr/bin/gdb"
-            },
-            "osx": {
-                "MIMode": "lldb"
-            }
+            "externalConsole": true,
+            "preLaunchTask": "Build C",
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe"
         },
         {
-            "name": "Run / Debug C++",
+            "name": "Run C++",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "build (c++)",
-            "windows": {
-                "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "MIMode": "gdb",
-                "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe"
-            },
-            "linux": {
-                "MIMode": "gdb",
-                "miDebuggerPath": "/usr/bin/gdb"
-            },
-            "osx": {
-                "MIMode": "lldb"
-            }
+            "externalConsole": true,
+            "preLaunchTask": "Build C++",
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe"
         }
     ]
 }

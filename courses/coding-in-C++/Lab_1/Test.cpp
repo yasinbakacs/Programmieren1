@@ -21,5 +21,12 @@ int main(){
     int age = 0;
 
     std::cout << "Enter your age: ";
-    
+
+    if(!(std::cin >> age)){
+        std::cout << "Not a valid input.";
+    }
+
+    else if(age < 0){
+        std::cout << "No negative ages allowed.";
+    }
 }

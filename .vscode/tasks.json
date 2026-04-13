@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build C (gcc)",
+            "label": "Build C",
             "type": "shell",
             "command": "C:/msys64/ucrt64/bin/gcc.exe",
             "args": [
@@ -11,16 +11,20 @@
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
+            "options": {
+                "shell": {
+                    "executable": "C:\\Windows\\System32\\cmd.exe",
+                    "args": ["/d", "/c"]
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": false
             },
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": ["$gcc"]
         },
         {
-            "label": "Build C++ (g++)",
+            "label": "Build C++",
             "type": "shell",
             "command": "C:/msys64/ucrt64/bin/g++.exe",
             "args": [
@@ -30,13 +34,17 @@
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
+            "options": {
+                "shell": {
+                    "executable": "C:\\Windows\\System32\\cmd.exe",
+                    "args": ["/d", "/c"]
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": ["$gcc"]
         }
     ]
 }
