@@ -41,4 +41,6 @@ int main(){
 
     Note text2(text1);
     text2.display();
+
+    return 0;
 }
