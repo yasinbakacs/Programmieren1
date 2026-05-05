@@ -18,9 +18,17 @@ class BankAccount{
     }
 
     void deposit(double amount){
-        
+        if(amount > 0){
+            balance += amount;
+        }else{
+            std::cout << "Input not valid." << std::endl;
+        }
     }
-    void withdraw(double amount);
+    void withdraw(double amount){
+        if(amount < 1){
+            
+        }
+    }
     double getBalance();
     void getAccountBalance();
 }
