@@ -36,7 +36,21 @@ class Vector2D{
         return *this;
     }
 
- 
+    
+    // Vector2D operator*(double scalar){
+    //     Vector2D vOut(scalar * x, scalar * y);
+    //     return vOut;
+    // }
+
+    bool operator==(const Vector2D &v){
+        if(x == v.x && y == v.y){
+            std::cout << "Die Vektoren sind gleich." << std::endl;
+            return true;
+        }else{
+            std::cout << "Die Vektoren sind nicht gleich" << std::endl;
+            return false;
+        }
+    }
 };
 
 std::ostream& operator<<(std::ostream& output, const Vector2D& v){
@@ -63,7 +77,11 @@ int main(){
     vec1 += vec2;
     std::cout << std::endl << vec1 << std::endl;
     Vector2D vec3;
-    vec3 = vec1 * 2;
+    vec3 = 2 * vec1;
     std::cout << vec3 << std::endl;
+    vec1 == vec2;
+    Vector2D vec4;
+    vec4 += vec2;
+    vec4 == vec2;
    
 }
