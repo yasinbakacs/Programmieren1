@@ -4,24 +4,10 @@
 
 #include "product.hpp"
 #include "report.hpp"
-#include ".devcontainer"
+#include <iostream>
+#include <string>
 
-class ElectricEngine : public Product {
-    private:
-    int weight;
-    int temperature;
-    int voltage;
-    bool visualInspection;
 
-    public:
-    ElectricEngine (int weight, int temp, int volt, bool visual) :
-                    weight(weight), temperature(temp),
-                    voltage(volt), visualInspection(visual){
-
-                    }
-};
-
-int Product::id = 0;
 
 class CombustionEngine : public Product{
     private:
