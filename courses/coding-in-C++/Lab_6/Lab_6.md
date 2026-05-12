@@ -98,7 +98,7 @@ Use the what-method to output the catched exception message.
 
 ## 🟢 Part 2: Multiple Catch Blocks
 
-Extend your program so that different exception types are handled separately.
+Extend your program so that different exception types are handled separately. Moreover, use only one try block for all tests.
 
 Also, all catch-statements should be located together - not being called directly after a try-block.
 
