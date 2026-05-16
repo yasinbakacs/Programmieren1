@@ -127,8 +127,7 @@ Examples:
 
 Create three sensors to measure the above mentioned states and intentionally trigger invalid situations.
 
-Use catch blocks directly after the try statements in the main. The catch-statement should use a parameter of type ```std::exception```.
-
+Use one catch block directly after the try statements in the main to catch each exception.
 Use the what-method to output the catched exception message.
 
 ### Question
@@ -164,7 +163,7 @@ Catch this exception in `main()`.
 
 ---
 
-## Reflection Questions
+### Reflection Questions
 
 1. Why are exceptions preferable to integer error codes in this system?
 2. Why should exceptions usually be caught by `const` reference?
