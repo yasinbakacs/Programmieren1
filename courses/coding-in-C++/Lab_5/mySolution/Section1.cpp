@@ -13,19 +13,19 @@ void swapVal(T &a, T &b){
     std::cout << a << ", "<< b << std::endl;
 }
 
-template <typename T, typename U>
-void printFrames (T arr[], U size){
+template <typename T, int U>
+void printFrames (T (&arr)[U]){
     std::cout << std::endl << "[ ";
-    for(int i = 0; i < size; i++){
+    for(int i = 0; i < U; i++){
         std::cout << arr[i] << " ";
     }
     std::cout << "]" << std::endl;
 }
 
-template <typename T, typename U>
-T smallestVal(T arr[], U size){
+template <typename T, int U>
+T smallestVal(T (&arr)[U] ){
     T temp = arr[0];
-    for(int i = 1; i < size; i++){
+    for(int i = 1; i < U; i++){
         if(temp > arr[i]){
             temp = arr[i];
         }
@@ -52,13 +52,13 @@ int main(){
     double f = 3.5;
     swapVal(e, f);
     int arr[] = {12, 15, 18, 21};
-    printFrames(arr, sizeof(arr) / sizeof(arr[0]));
-    smallestVal(arr, sizeof(arr) / sizeof(arr[0]));
+    printFrames(arr);
+    smallestVal(arr);
     double arr2[] = {1.1, 1.2, 1.3, 0.6};
-    printFrames(arr2, sizeof(arr2) / sizeof(arr2[0]));
-    smallestVal(arr2, sizeof(arr2) / sizeof(arr2[0]));
+    printFrames(arr2);
+    smallestVal(arr2);
     pairs("label1", 3, "label2", 4);
-    
+
 
 
     
