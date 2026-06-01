@@ -2,12 +2,31 @@
 
 #include <iostream>
 
+namespace
+{
 constexpr int MIN_PROFESSIONAL_AGE = 16;
-constexpr int DEFAULT_TRAINING_INTENSITY = 70;
+constexpr int MIN_TRAINING_INTENSITY = 0;
+constexpr int MAX_STANDARD_TRAINING_INTENSITY = 100;
+constexpr int MAX_RECOVERY_TRAINING_INTENSITY = 30;
 
-Player::Player(const std::string &name, int age)
+const char *status_to_text(PlayerStatus status)
+{
+    switch (status)
+    {
+    case PlayerStatus::Available:
+        return "available";
+    case PlayerStatus::Injured:
+        return "injured";
+    }
+
+    return "unknown";
+}
+} // namespace
+
+Player::Player(const std::string &name, int age, PlayerStatus status)
     : name(name),
-      age(age)
+      age(age),
+      status(status)
 {
 }
 
@@ -21,31 +40,54 @@ int Player::get_age() const
     return age;
 }
 
-void Player::train(int intensity)
+PlayerStatus Player::get_status() const
 {
-    if (intensity < 0 || intensity > 100)
-    {
-        std::cout << "Invalid intensity. Use a value between 0 and 100.\n";
-        return;
-    }
-
-    std::cout << get_name() << " trains with intensity " << intensity << ".\n";
+    return status;
 }
 
-InjuredPlayer::InjuredPlayer(const std::string &name, int age)
-    : Player(name, age)
+bool Player::is_available_for_match() const
 {
+    return status == PlayerStatus::Available;
 }
 
-void InjuredPlayer::train(int intensity)
+bool StandardTrainingPlan::train(Player &player, int intensity) const
 {
-    if (intensity > 30)
+    if (intensity < MIN_TRAINING_INTENSITY || intensity > MAX_STANDARD_TRAINING_INTENSITY)
     {
-        std::cout << "ERROR: Injured players only accept intensity values up to 30.\n";
-        return;
+        std::cout << "Invalid standard training intensity. Use a value between 0 and 100.\n";
+        return false;
     }
 
-    std::cout << get_name() << " performs recovery training with intensity " << intensity << ".\n";
+    std::cout << player.get_name()
+              << " trains with standard intensity "
+              << intensity
+              << ".\n";
+    return true;
+}
+
+bool RecoveryTrainingPlan::train(Player &player, int intensity) const
+{
+    if (intensity < MIN_TRAINING_INTENSITY || intensity > MAX_RECOVERY_TRAINING_INTENSITY)
+    {
+        std::cout << "Invalid recovery training intensity. Use a value between 0 and 30.\n";
+        return false;
+    }
+
+    std::cout << player.get_name()
+              << " performs recovery training with intensity "
+              << intensity
+              << ".\n";
+    return true;
+}
+
+void OffensiveStrategy::apply() const
+{
+    std::cout << "Strategy: offensive pressing.\n";
+}
+
+void DefensiveStrategy::apply() const
+{
+    std::cout << "Strategy: compact defense.\n";
 }
 
 void FilePlayerRepository::save(const Player &player)
@@ -58,23 +100,64 @@ void EmailNotifier::send(const Player &player, const std::string &message)
     std::cout << "Sending email to " << player.get_name() << ": " << message << "\n";
 }
 
-void FootballManager::prepare_player(Player &player, const std::string &strategy)
+void ConsoleSponsorReportPrinter::print_report(const Player &player)
 {
+    std::cout << "Sponsor Report\n";
+    std::cout << "Player: " << player.get_name() << "\n";
+    std::cout << "Age: " << player.get_age() << "\n";
+    std::cout << "Status: " << status_to_text(player.get_status()) << "\n";
+}
+
+FootballManager::FootballManager(
+    PlayerRepository &repository,
+    PlayerNotifier &notifier,
+    SponsorReportPrinter &report_printer)
+    : repository(repository),
+      notifier(notifier),
+      report_printer(report_printer)
+{
+}
+
+void FootballManager::manage_player(
+    Player &player,
+    const TrainingPlan &training_plan,
+    const MatchStrategy &match_strategy,
+    int training_intensity)
+{
+    std::cout << "Managing player " << player.get_name() << ".\n";
+
     if (player.get_age() < MIN_PROFESSIONAL_AGE)
     {
         std::cout << player.get_name() << " is too young for the professional team.\n";
         return;
     }
 
-    select_strategy(strategy);
-    train_player(player, DEFAULT_TRAINING_INTENSITY);
+    select_match_strategy(player, match_strategy);
+
+    if (!train_player(player, training_plan, training_intensity))
+    {
+        return;
+    }
+
     save_player(player);
-    notify_player(player, "Training preparation completed.");
+    send_message(player, "Training preparation completed.");
+    print_sponsor_report(player);
 }
 
-void FootballManager::train_player(Player &player, int intensity)
+bool FootballManager::train_player(Player &player, const TrainingPlan &training_plan, int intensity) const
 {
-    player.train(intensity);
+    return training_plan.train(player, intensity);
+}
+
+void FootballManager::select_match_strategy(const Player &player, const MatchStrategy &match_strategy) const
+{
+    if (!player.is_available_for_match())
+    {
+        std::cout << player.get_name() << " is injured and is not selected for the match.\n";
+        return;
+    }
+
+    match_strategy.apply();
 }
 
 void FootballManager::save_player(const Player &player)
@@ -82,37 +165,35 @@ void FootballManager::save_player(const Player &player)
     repository.save(player);
 }
 
-void FootballManager::notify_player(const Player &player, const std::string &message)
+void FootballManager::send_message(const Player &player, const std::string &message)
 {
     notifier.send(player, message);
 }
 
-void FootballManager::select_strategy(const std::string &strategy)
+void FootballManager::print_sponsor_report(const Player &player)
 {
-    if (strategy == "offensive")
-    {
-        std::cout << "Strategy: offensive pressing.\n";
-    }
-    else if (strategy == "defensive")
-    {
-        std::cout << "Strategy: compact defense.\n";
-    }
-    else
-    {
-        std::cout << "Strategy: balanced default strategy.\n";
-    }
+    report_printer.print_report(player);
 }
 
 int main()
 {
-    Player player("Alex Striker", 24);
-    InjuredPlayer injured_player("Ben Defender", 29);
+    Player player("Alex Striker", 24, PlayerStatus::Available);
+    Player injured_player("Ben Defender", 29, PlayerStatus::Injured);
 
-    FootballManager manager;
+    FilePlayerRepository repository;
+    EmailNotifier notifier;
+    ConsoleSponsorReportPrinter report_printer;
 
-    manager.prepare_player(player, "offensive");
+    StandardTrainingPlan standard_training;
+    RecoveryTrainingPlan recovery_training;
+    OffensiveStrategy offensive_strategy;
+    DefensiveStrategy defensive_strategy;
+
+    FootballManager manager(repository, notifier, report_printer);
+
+    manager.manage_player(player, standard_training, offensive_strategy, 70);
     std::cout << "\n";
-    manager.prepare_player(injured_player, "defensive");
+    manager.manage_player(injured_player, recovery_training, defensive_strategy, 20);
 
     return 0;
 }

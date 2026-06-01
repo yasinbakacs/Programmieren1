@@ -3,68 +3,149 @@
 
 #include <string>
 
+/*
+ * SOLID findings in the original BugHunt version:
+ * - SRP: FootballManager violated the Single Responsibility Principle because
+ *   it selected strategies, trained players, saved data and sent messages.
+ * - OCP: FootballManager::select_strategy used if/else checks on strategy
+ *   strings, so adding a new strategy required changing existing code.
+ * - LSP: InjuredPlayer was problematic because it inherited from Player but
+ *   accepted only lower training intensities, strengthening the base contract.
+ * - ISP: ClubService forced training, saving and notification into one large
+ *   interface although clients may need only one of those responsibilities.
+ * - DIP: FootballManager depended directly on FilePlayerRepository and
+ *   EmailNotifier; these concrete dependencies should be replaced by
+ *   repository, notification and report abstractions.
+ */
+
+enum class PlayerStatus
+{
+    Available,
+    Injured
+};
+
 class Player
 {
 private:
     std::string name;
     int age;
+    PlayerStatus status;
 
 public:
-    Player(const std::string &name, int age);
-    virtual ~Player() = default;
+    Player(const std::string &name, int age, PlayerStatus status);
 
     std::string get_name() const;
     int get_age() const;
-
-    virtual void train(int intensity);
+    PlayerStatus get_status() const;
+    bool is_available_for_match() const;
 };
 
-class InjuredPlayer : public Player
+class TrainingPlan
 {
 public:
-    InjuredPlayer(const std::string &name, int age);
+    virtual ~TrainingPlan() = default;
 
-    void train(int intensity) override;
+    virtual bool train(Player &player, int intensity) const = 0;
 };
 
-class ClubService
+class StandardTrainingPlan : public TrainingPlan
 {
 public:
-    virtual ~ClubService() = default;
-
-    virtual void train_player(Player &player, int intensity) = 0;
-    virtual void save_player(const Player &player) = 0;
-    virtual void notify_player(const Player &player, const std::string &message) = 0;
+    bool train(Player &player, int intensity) const override;
 };
 
-class FilePlayerRepository
+class RecoveryTrainingPlan : public TrainingPlan
 {
 public:
-    void save(const Player &player);
+    bool train(Player &player, int intensity) const override;
 };
 
-class EmailNotifier
+class MatchStrategy
 {
 public:
-    void send(const Player &player, const std::string &message);
+    virtual ~MatchStrategy() = default;
+
+    virtual void apply() const = 0;
 };
 
-class FootballManager : public ClubService
+class OffensiveStrategy : public MatchStrategy
+{
+public:
+    void apply() const override;
+};
+
+class DefensiveStrategy : public MatchStrategy
+{
+public:
+    void apply() const override;
+};
+
+class PlayerRepository
+{
+public:
+    virtual ~PlayerRepository() = default;
+
+    virtual void save(const Player &player) = 0;
+};
+
+class FilePlayerRepository : public PlayerRepository
+{
+public:
+    void save(const Player &player) override;
+};
+
+class PlayerNotifier
+{
+public:
+    virtual ~PlayerNotifier() = default;
+
+    virtual void send(const Player &player, const std::string &message) = 0;
+};
+
+class EmailNotifier : public PlayerNotifier
+{
+public:
+    void send(const Player &player, const std::string &message) override;
+};
+
+class SponsorReportPrinter
+{
+public:
+    virtual ~SponsorReportPrinter() = default;
+
+    virtual void print_report(const Player &player) = 0;
+};
+
+class ConsoleSponsorReportPrinter : public SponsorReportPrinter
+{
+public:
+    void print_report(const Player &player) override;
+};
+
+class FootballManager
 {
 private:
-    void select_strategy(const std::string &strategy);
-
-    FilePlayerRepository repository;
-    EmailNotifier notifier;
+    PlayerRepository &repository;
+    PlayerNotifier &notifier;
+    SponsorReportPrinter &report_printer;
 
 public:
-    FootballManager() = default;
+    FootballManager(
+        PlayerRepository &repository,
+        PlayerNotifier &notifier,
+        SponsorReportPrinter &report_printer);
 
-    void prepare_player(Player &player, const std::string &strategy);
+    void manage_player(
+        Player &player,
+        const TrainingPlan &training_plan,
+        const MatchStrategy &match_strategy,
+        int training_intensity);
 
-    void train_player(Player &player, int intensity) override;
-    void save_player(const Player &player) override;
-    void notify_player(const Player &player, const std::string &message) override;
+    bool train_player(Player &player, const TrainingPlan &training_plan, int intensity) const;
+    void select_match_strategy(const Player &player, const MatchStrategy &match_strategy) const;
+    void save_player(const Player &player);
+    void send_message(const Player &player, const std::string &message);
+    void print_sponsor_report(const Player &player);
 };
 
 #endif
