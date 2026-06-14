@@ -51,11 +51,11 @@ int main(){
     Rectangle rec2(2, 3);
 
     constexpr int SIZE = 4;
-    Shape* arr[SIZE];
-    arr[0] = &circle1;
-    arr[1] = &rec1;
-    arr[2] = &circle2;
-    arr[3] = &rec2;
+    Shape* arr[SIZE] {&circle1, &rec1, &circle2, &rec2};
+    // arr[0] = &circle1;
+    // arr[1] = &rec1;
+    // arr[2] = &circle2;
+    // arr[3] = &rec2;
 
     for(int i = 0; i < SIZE; i++){
         arr[i]->area();
